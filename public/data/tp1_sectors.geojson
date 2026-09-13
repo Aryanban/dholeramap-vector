@@ -1,0 +1,372 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "tp1-master-boundary",
+      "properties": {
+        "id": "tp1-master",
+        "name": "Town Planning Scheme 1 (Master Boundary)",
+        "code": "TP 1 Master",
+        "isMaster": true,
+        "areaSqKm": 51.4,
+        "statutoryStatus": "Sanctioned Preliminary Scheme (Sec 50 Act 1976)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.128,
+              22.3
+            ],
+            [
+              72.15,
+              22.345
+            ],
+            [
+              72.255,
+              22.345
+            ],
+            [
+              72.274,
+              22.342
+            ],
+            [
+              72.274,
+              22.32
+            ],
+            [
+              72.27,
+              22.25
+            ],
+            [
+              72.22,
+              22.25
+            ],
+            [
+              72.165,
+              22.26
+            ],
+            [
+              72.145,
+              22.28
+            ],
+            [
+              72.128,
+              22.3
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tp1-1a1",
+      "properties": {
+        "id": "tp1-1a1",
+        "code": "TP 1A-1",
+        "name": "Town Planning Scheme 1A-1",
+        "sector": "Ambli / Gogla Sector",
+        "zone": "Residential R-1 / City Center",
+        "color": "#3B82F6",
+        "fillColor": "#DBEAFE",
+        "villages": "Ambli, Gogla, Khun",
+        "bounds": [
+          72.235,
+          22.315,
+          72.274,
+          22.345
+        ],
+        "isMaster": false
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.235,
+              22.315
+            ],
+            [
+              72.255,
+              22.345
+            ],
+            [
+              72.274,
+              22.342
+            ],
+            [
+              72.273,
+              22.32
+            ],
+            [
+              72.25,
+              22.315
+            ],
+            [
+              72.235,
+              22.315
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tp1-1a2",
+      "properties": {
+        "id": "tp1-1a2",
+        "code": "TP 1A-2",
+        "name": "Town Planning Scheme 1A-2",
+        "sector": "Kadipur / Otariya Sector",
+        "zone": "Residential R-1 / City Center Commercial",
+        "color": "#10B981",
+        "fillColor": "#D1FAE5",
+        "villages": "Kadipur, Otariya, Bhadiyad",
+        "bounds": [
+          72.165,
+          22.26,
+          72.215,
+          22.325
+        ],
+        "isMaster": false
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.165,
+              22.26
+            ],
+            [
+              72.175,
+              22.31
+            ],
+            [
+              72.215,
+              22.325
+            ],
+            [
+              72.21,
+              22.28
+            ],
+            [
+              72.18,
+              22.26
+            ],
+            [
+              72.165,
+              22.26
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tp1-1a3",
+      "properties": {
+        "id": "tp1-1a3",
+        "code": "TP 1A-3",
+        "name": "Town Planning Scheme 1A-3",
+        "sector": "Bhimtalav / Valinda Sector",
+        "zone": "Residential North-East",
+        "color": "#8B5CF6",
+        "fillColor": "#EDE9FE",
+        "villages": "Bhimtalav, Valinda, Sela",
+        "bounds": [
+          72.128,
+          22.28,
+          72.19,
+          22.345
+        ],
+        "isMaster": false
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.128,
+              22.3
+            ],
+            [
+              72.15,
+              22.345
+            ],
+            [
+              72.19,
+              22.34
+            ],
+            [
+              72.185,
+              22.29
+            ],
+            [
+              72.145,
+              22.28
+            ],
+            [
+              72.128,
+              22.3
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tp1-1a4",
+      "properties": {
+        "id": "tp1-1a4",
+        "code": "TP 1A-4",
+        "name": "Town Planning Scheme 1A-4",
+        "sector": "Hebatpur / Kamatalav Sector",
+        "zone": "High Density Residential / Logistics",
+        "color": "#F59E0B",
+        "fillColor": "#FEF3C7",
+        "villages": "Hebatpur, Kamatalav",
+        "bounds": [
+          72.23,
+          22.295,
+          72.274,
+          22.33
+        ],
+        "isMaster": false
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.23,
+              22.31
+            ],
+            [
+              72.25,
+              22.33
+            ],
+            [
+              72.274,
+              22.325
+            ],
+            [
+              72.265,
+              22.295
+            ],
+            [
+              72.23,
+              22.31
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tp1-1a5",
+      "properties": {
+        "id": "tp1-1a5",
+        "code": "TP 1A-5",
+        "name": "Town Planning Scheme 1A-5",
+        "sector": "City Center North Spine",
+        "zone": "Commercial Core & Mix Use",
+        "color": "#EC4899",
+        "fillColor": "#FCE7F3",
+        "villages": "Sangasar, Gogla, Sodhi",
+        "bounds": [
+          72.2,
+          22.275,
+          72.245,
+          22.315
+        ],
+        "isMaster": false
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.2,
+              22.285
+            ],
+            [
+              72.215,
+              22.315
+            ],
+            [
+              72.245,
+              22.31
+            ],
+            [
+              72.24,
+              22.275
+            ],
+            [
+              72.21,
+              22.275
+            ],
+            [
+              72.2,
+              22.285
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tp1-1b",
+      "properties": {
+        "id": "tp1-1b",
+        "code": "TP 1B",
+        "name": "Town Planning Scheme 1B",
+        "sector": "City Center South & Central Plaza",
+        "zone": "Central Plaza & Knowledge Park",
+        "color": "#06B6D4",
+        "fillColor": "#CFFAFE",
+        "villages": "Sandhida, Umargadh, Bhimtalav",
+        "bounds": [
+          72.22,
+          22.25,
+          72.27,
+          22.295
+        ],
+        "isMaster": false
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.22,
+              22.26
+            ],
+            [
+              72.235,
+              22.295
+            ],
+            [
+              72.27,
+              22.29
+            ],
+            [
+              72.265,
+              22.25
+            ],
+            [
+              72.235,
+              22.25
+            ],
+            [
+              72.22,
+              22.26
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
