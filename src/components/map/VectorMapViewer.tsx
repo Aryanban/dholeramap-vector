@@ -450,7 +450,7 @@ export default function VectorMapViewer() {
       </div>
 
       {/* Map Control Tools (Right Bottom) */}
-      <div className="absolute bottom-6 right-4 z-10 flex flex-col gap-2">
+      <div className="absolute bottom-6 left-4 z-10 flex flex-col gap-2">
         <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden flex flex-col">
           <button
             onClick={() => mapRef.current?.zoomIn()}
