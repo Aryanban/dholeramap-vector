@@ -5,10 +5,33 @@ import { useAppStore, PlotData } from '@/store/map-store';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { Compass, Maximize2, Plus, Minus, Box } from 'lucide-react';
 
-const STYLE_URLS = {
-  vector: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+const BASE_STYLES = {
+  vector: {
+    version: 8,
+    glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+    sources: {
+      'carto-voyager': {
+        type: 'raster',
+        tiles: [
+          'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+        ],
+        tileSize: 256,
+        attribution: '© CARTO, © OpenStreetMap contributors',
+      },
+    },
+    layers: [
+      {
+        id: 'carto-voyager-layer',
+        type: 'raster',
+        source: 'carto-voyager',
+        minzoom: 0,
+        maxzoom: 20,
+      },
+    ],
+  },
   satellite: {
     version: 8,
+    glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
     sources: {
       'esri-satellite': {
         type: 'raster',
@@ -16,7 +39,7 @@ const STYLE_URLS = {
           'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
         ],
         tileSize: 256,
-        attribution: 'ESRI World Imagery',
+        attribution: '© ESRI World Imagery',
       },
     },
     layers: [
@@ -29,7 +52,29 @@ const STYLE_URLS = {
       },
     ],
   },
-  dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+  dark: {
+    version: 8,
+    glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+    sources: {
+      'carto-dark': {
+        type: 'raster',
+        tiles: [
+          'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+        ],
+        tileSize: 256,
+        attribution: '© CARTO, © OpenStreetMap contributors',
+      },
+    },
+    layers: [
+      {
+        id: 'carto-dark-layer',
+        type: 'raster',
+        source: 'carto-dark',
+        minzoom: 0,
+        maxzoom: 20,
+      },
+    ],
+  },
 };
 
 export default function VectorMapViewer() {
@@ -49,16 +94,15 @@ export default function VectorMapViewer() {
   const [is3D, setIs3D] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(12.2);
 
-  // Initialize MapLibre GL
   useEffect(() => {
     let mapInstance: any = null;
 
     async function initMap() {
       if (typeof window === 'undefined' || !mapContainerRef.current) return;
-      const maplibreModule = await import('maplibre-gl'); const maplibregl: any = (maplibreModule as any).default || maplibreModule;
+      const maplibreModule = await import('maplibre-gl');
+      const maplibregl: any = (maplibreModule as any).default || maplibreModule;
 
-      const styleDef =
-        mapStyle === 'satellite' ? STYLE_URLS.satellite : STYLE_URLS[mapStyle];
+      const styleDef = BASE_STYLES[mapStyle] || BASE_STYLES.vector;
 
       const map = new maplibregl.Map({
         container: mapContainerRef.current,
@@ -72,6 +116,8 @@ export default function VectorMapViewer() {
           [72.35, 22.42], // Northeast
         ],
       });
+
+      (window as any)._map = map;
 
       hoverPopupRef.current = new maplibregl.Popup({
         closeButton: false,
@@ -141,7 +187,6 @@ export default function VectorMapViewer() {
         source: 'tp1-sectors',
         layout: {
           'text-field': ['get', 'code'],
-          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
           'text-size': 14,
           'text-transform': 'uppercase',
           'text-letter-spacing': 0.1,
@@ -193,7 +238,6 @@ export default function VectorMapViewer() {
         layout: {
           'symbol-placement': 'line',
           'text-field': ['get', 'name'],
-          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
           'text-size': 10,
           'text-letter-spacing': 0.08,
           'text-offset': [0, 0.6],
@@ -271,7 +315,6 @@ export default function VectorMapViewer() {
         minzoom: 14.2,
         layout: {
           'text-field': ['get', 'finalPlot'],
-          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
           'text-size': 10,
           'text-allow-overlap': false,
         },
@@ -449,7 +492,7 @@ export default function VectorMapViewer() {
         </span>
       </div>
 
-      {/* Map Control Tools (Right Bottom) */}
+      {/* Map Control Tools (Left Bottom to avoid right drawer overlap) */}
       <div className="absolute bottom-6 left-4 z-10 flex flex-col gap-2">
         <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden flex flex-col">
           <button
