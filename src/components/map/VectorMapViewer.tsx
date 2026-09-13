@@ -10,22 +10,22 @@ const BASE_STYLES = {
     version: 8,
     glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
     sources: {
-      'carto-voyager': {
+      'esri-topo': {
         type: 'raster',
         tiles: [
-          'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+          'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
         ],
         tileSize: 256,
-        attribution: '© CARTO, © OpenStreetMap contributors',
+        attribution: '© ESRI World Topo Map',
       },
     },
     layers: [
       {
-        id: 'carto-voyager-layer',
+        id: 'esri-topo-layer',
         type: 'raster',
-        source: 'carto-voyager',
+        source: 'esri-topo',
         minzoom: 0,
-        maxzoom: 20,
+        maxzoom: 19,
       },
     ],
   },
@@ -56,22 +56,22 @@ const BASE_STYLES = {
     version: 8,
     glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
     sources: {
-      'carto-dark': {
+      'esri-gray': {
         type: 'raster',
         tiles: [
-          'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+          'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
         ],
         tileSize: 256,
-        attribution: '© CARTO, © OpenStreetMap contributors',
+        attribution: '© ESRI Canvas',
       },
     },
     layers: [
       {
-        id: 'carto-dark-layer',
+        id: 'esri-gray-layer',
         type: 'raster',
-        source: 'carto-dark',
+        source: 'esri-gray',
         minzoom: 0,
-        maxzoom: 20,
+        maxzoom: 19,
       },
     ],
   },
@@ -101,6 +101,12 @@ export default function VectorMapViewer() {
       if (typeof window === 'undefined' || !mapContainerRef.current) return;
       const maplibreModule = await import('maplibre-gl');
       const maplibregl: any = (maplibreModule as any).default || maplibreModule;
+      if (typeof window !== 'undefined') {
+        maplibregl.workerUrl = '/maplibre-gl-csp-worker.js';
+        if (typeof maplibregl.setWorkerUrl === 'function') {
+          maplibregl.setWorkerUrl('/maplibre-gl-csp-worker.js');
+        }
+      }
 
       const styleDef = BASE_STYLES[mapStyle] || BASE_STYLES.vector;
 
@@ -112,8 +118,8 @@ export default function VectorMapViewer() {
         pitch: 0,
         bearing: 0,
         maxBounds: [
-          [72.05, 22.18], // Southwest
-          [72.35, 22.42], // Northeast
+          [72.05, 22.18],
+          [72.35, 22.42],
         ],
       });
 
@@ -126,9 +132,26 @@ export default function VectorMapViewer() {
         className: 'custom-vector-popup',
       });
 
-      map.on('load', () => {
-        addVectorLayers(map);
-      });
+      async function setupLayers() {
+        try {
+          console.log('[VectorMap] setupLayers executing...');
+          const [sectorsData, roadsData, plotsData] = await Promise.all([
+            fetch('/data/tp1_sectors.geojson').then((r) => r.json()),
+            fetch('/data/tp1_roads.geojson').then((r) => r.json()),
+            fetch('/data/tp1_plots.geojson').then((r) => r.json()),
+          ]);
+          console.log('[VectorMap] GeoJSON loaded, adding layers to map...');
+          addVectorLayers(map, sectorsData, roadsData, plotsData);
+        } catch (err) {
+          console.error('[VectorMap] Failed to load GeoJSON datasets:', err);
+        }
+      }
+
+      if (map.isStyleLoaded()) {
+        setupLayers();
+      } else {
+        map.on('load', setupLayers);
+      }
 
       map.on('zoom', () => {
         setZoomLevel(map.getZoom());
@@ -147,14 +170,14 @@ export default function VectorMapViewer() {
     };
   }, [mapStyle]);
 
-  function addVectorLayers(map: any) {
+  function addVectorLayers(map: any, sectorsData: any, roadsData: any, plotsData: any) {
     if (!map) return;
 
     // 1. Sub-Sectors Polygon Source & Layers
-    if (!map.getSource('tp1-sectors')) {
+    if (!map.getSource('tp1-sectors') && sectorsData) {
       map.addSource('tp1-sectors', {
         type: 'geojson',
-        data: '/data/tp1_sectors.geojson',
+        data: sectorsData,
       });
 
       // Sub-Sector Fill
@@ -164,7 +187,7 @@ export default function VectorMapViewer() {
         source: 'tp1-sectors',
         paint: {
           'fill-color': ['get', 'fillColor'],
-          'fill-opacity': 0.35,
+          'fill-opacity': 0.4,
         },
       });
 
@@ -175,7 +198,7 @@ export default function VectorMapViewer() {
         source: 'tp1-sectors',
         paint: {
           'line-color': ['get', 'color'],
-          'line-width': 2.5,
+          'line-width': 3,
           'line-dasharray': [3, 2],
         },
       });
@@ -200,10 +223,10 @@ export default function VectorMapViewer() {
     }
 
     // 2. TP 1 Major Road Corridors
-    if (!map.getSource('tp1-roads')) {
+    if (!map.getSource('tp1-roads') && roadsData) {
       map.addSource('tp1-roads', {
         type: 'geojson',
-        data: '/data/tp1_roads.geojson',
+        data: roadsData,
       });
 
       // Road white casing
@@ -213,8 +236,8 @@ export default function VectorMapViewer() {
         source: 'tp1-roads',
         paint: {
           'line-color': '#FFFFFF',
-          'line-width': ['+', ['get', 'lineWidth'], 3],
-          'line-opacity': 0.9,
+          'line-width': ['+', ['get', 'lineWidth'], 4],
+          'line-opacity': 0.95,
         },
       });
 
@@ -251,10 +274,10 @@ export default function VectorMapViewer() {
     }
 
     // 3. Cadastral Plots (2,867 plots)
-    if (!map.getSource('tp1-plots')) {
+    if (!map.getSource('tp1-plots') && plotsData) {
       map.addSource('tp1-plots', {
         type: 'geojson',
-        data: '/data/tp1_plots.geojson',
+        data: plotsData,
       });
 
       // Plot Polygon Fill
@@ -277,7 +300,7 @@ export default function VectorMapViewer() {
             0.85,
             ['==', ['get', 'id'], hoveredPlotId || ''],
             0.6,
-            0.4,
+            0.45,
           ],
         },
       });
@@ -294,15 +317,15 @@ export default function VectorMapViewer() {
             '#1D4ED8',
             ['==', ['get', 'id'], hoveredPlotId || ''],
             '#2563EB',
-            '#94A3B8',
+            '#2563EB',
           ],
           'line-width': [
             'case',
             ['==', ['get', 'id'], selectedPlot?.id || ''],
-            3,
+            3.5,
             ['==', ['get', 'id'], hoveredPlotId || ''],
-            2,
-            0.8,
+            2.5,
+            1.0,
           ],
         },
       });
@@ -312,10 +335,10 @@ export default function VectorMapViewer() {
         id: 'tp1-plots-label',
         type: 'symbol',
         source: 'tp1-plots',
-        minzoom: 14.2,
+        minzoom: 14.0,
         layout: {
           'text-field': ['get', 'finalPlot'],
-          'text-size': 10,
+          'text-size': 11,
           'text-allow-overlap': false,
         },
         paint: {
@@ -413,7 +436,7 @@ export default function VectorMapViewer() {
       0.85,
       ['==', ['get', 'id'], hoveredPlotId || ''],
       0.6,
-      0.4,
+      0.45,
     ]);
 
     map.setPaintProperty('tp1-plots-line', 'line-color', [
@@ -422,16 +445,16 @@ export default function VectorMapViewer() {
       '#1D4ED8',
       ['==', ['get', 'id'], hoveredPlotId || ''],
       '#2563EB',
-      '#94A3B8',
+      '#2563EB',
     ]);
 
     map.setPaintProperty('tp1-plots-line', 'line-width', [
       'case',
       ['==', ['get', 'id'], selectedPlot?.id || ''],
-      3,
+      3.5,
       ['==', ['get', 'id'], hoveredPlotId || ''],
-      2,
-      0.8,
+      2.5,
+      1.0,
     ]);
   }, [selectedPlot, hoveredPlotId]);
 
